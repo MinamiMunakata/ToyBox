@@ -1,0 +1,8 @@
+.tic-button {
+    -fx-font: 16px "Serif";
+    -fx-padding: 10px;
+    -fx-pref-height: 90px;
+    -fx-pref-width: 90px;
+    -fx-background-color: #CCFF99;
+
+}
