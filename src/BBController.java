@@ -1,5 +1,3 @@
-package BrickBreaker;
-
 import javafx.animation.AnimationTimer;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
@@ -18,7 +16,11 @@ import javafx.scene.text.TextAlignment;
  * @author Minami Munakata
  */
 
-public class Controller {
+public class BBController {
+    // player's info
+    private String name;
+    private int score = 0;
+    private String date;
     // basic info
     private final Group group = new Group();
     private final Canvas canvas;
@@ -46,19 +48,20 @@ public class Controller {
     private long hitDoubleTimeMillis;
     // other config
     public static boolean canPlay = false;
-    private int score = 0;
     private int totalBricks = 50;
-    Brick brick = new Brick(5,10);
+    private Brick brick = new Brick(5,10);
     public static boolean highSpeed;
-    public  static final Color DARK_BLUE = Color.rgb(2, 0, 86);
+    public static final Color DARK_BLUE = Color.rgb(2, 0, 86);
 
     /**
      * Constructor
      * create a canvas and set into a group
      */
-    public Controller( ) {
+    public BBController(String name, String date) {
         this.canvas = new Canvas(WIDTH,HEIGHT);
         group.getChildren().add(canvas);
+        this.name = name;
+        this.date = date;
     }
 
     /**
@@ -110,21 +113,21 @@ public class Controller {
         g.fillRect(playerX,PLAYER_Y,lengthOfPaddle,HEIGHT_OF_PADDLE);
 
         // ball
-//        createBall(g);
         g.setFill(Color.rgb(255,5,100));
         g.fillOval(ballPosX,ballPosY,BALL_SIZE,BALL_SIZE);
-//        moveBall();
         g.setFill(MY_YELLOW);
         // show some message
         showDoublePointMessage();
         showSpeedUpMessage(MY_SKY_BLUE);
-        // Message when game ended
+        // When game ended or before start the game.
         if (totalBricks <= 0) {
             gameOver();
             showMessageWhenGameEnds(MY_YELLOW, "You Won!! Score: ");
+            recordScore();
         } else if (ballPosY > 600) {
             gameOver();
             showMessageWhenGameEnds(MY_YELLOW, "Game Over... Score: ");
+            recordScore();
         } else if (!canPlay) {
             g.setFill(MY_YELLOW);
             g.setTextAlign(TextAlignment.CENTER);
@@ -132,9 +135,15 @@ public class Controller {
             g.fillText("Press Enter to start", Math.round(WIDTH / 2), Math.round(HEIGHT / 2));
             g.setStroke(Color.ORANGE);
             g.strokeText("Press Enter to start", Math.round(WIDTH / 2), Math.round(HEIGHT / 2));
-
         }
+    }
 
+    /**
+     * record a score to database
+     */
+    private void recordScore() {
+        GameHistory.addPlayRecord(name, String.valueOf(score), date);
+        timer.stop();
     }
 
     /**
@@ -322,6 +331,7 @@ public class Controller {
             }
             if (event.getCode() == KeyCode.ENTER) {
                 if (!canPlay) {
+                    timer.start();
                     canPlay = true;
                     ballPosX = 120;
                     ballPosY = 350;
@@ -364,10 +374,27 @@ public class Controller {
     }
 
     /**
+     * get a width of a canvas
+     * @return width of a canvas
+     */
+    public double getWIDTH() {
+        return WIDTH;
+    }
+
+    /**
+     * get a height of a canvas
+     * @return height of a canvas
+     */
+    public double getHEIGHT() {
+        return HEIGHT;
+    }
+
+    /**
      * get a group
      * @return a group
      */
     public Group getGroup() {
         return group;
     }
+
 }

@@ -1,5 +1,3 @@
-package BrickBreaker;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -7,9 +5,9 @@ import javafx.scene.paint.Color;
  * @author Minami Munakata
  */
 
-public class Brick {
+class Brick {
 
-    public int[][] bricks;
+    int[][] bricks;
     private int brickWidth;
     private int brickHeight;
     private GraphicsContext g;
@@ -50,8 +48,8 @@ public class Brick {
                         g.fillRect(col * brickWidth + 80, row * brickHeight + 50, brickWidth, brickHeight);
                     }
                     // border
-                    if (Controller.highSpeed) {
-                        g.setStroke(Controller.DARK_BLUE);
+                    if (BBController.highSpeed) {
+                        g.setStroke(BBController.DARK_BLUE);
                         g.strokeRect(col * brickWidth + 80, row * brickHeight + 50, brickWidth, brickHeight);
                     } else {
                         g.setStroke(Color.WHITE);
