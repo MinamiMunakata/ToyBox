@@ -22,6 +22,7 @@ public class Main extends Application {
         primaryStage.setTitle("Toy Box");
         primaryStage.setResizable(false);
         Button btn_changeIcon = new Button("Change an icon");
+        Button btn_GoToTTT = new Button("Tic Tac Toe");
         final TextField txt_playerName = new TextField();
         txt_playerName.setPromptText("Enter your first name.");
         txt_playerName.setPrefColumnCount(10);
