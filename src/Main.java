@@ -38,7 +38,8 @@ public class Main extends Application {
         gridPane.add(btn_changeIcon, 0, 0, 2, 1);
         gridPane.add(txt_playerName, 0, 1, 2, 1);
         gridPane.add(btn_GoToBB, 0, 2, 1, 1);
-        gridPane.add(btn_GoToHistory,1,2,1,1);
+        gridPane.add(btn_GoToTTT,1,2,1,1);
+        gridPane.add(btn_GoToHistory,0,3,1,1);
 
         Scene firstScene = new Scene(gridPane);
         primaryStage.setScene(firstScene);
@@ -56,6 +57,15 @@ public class Main extends Application {
             setCenter(primaryStage);
         });
 
+        // TIc Tac Toe scene
+        Parent root = FXMLLoader.load(getClass().getResource("tic_tac_toe.fxml"));
+        Scene ticTacToeScreen = new Scene(root, 500, 500);
+        ticTacToeScreen.getStylesheets().add("Styles/style.css");
+        btn_GoToTTT.setOnAction(event -> {
+            primaryStage.setScene(ticTacToeScreen);
+            setCenter(primaryStage);
+        });
+
         // History scene
         btn_GoToHistory.setOnAction(event -> {
             GameHistory history = new GameHistory();
@@ -69,15 +79,10 @@ public class Main extends Application {
             primaryStage.setHeight(550);
 
             primaryStage.setScene(historyScreen);
+            setCenter(primaryStage);
 
             history.closeConnection(connection);
         });
-
-        Parent root = FXMLLoader.load(getClass().getResource("tic_tac_toe.fxml"));
-        Scene scene = new Scene(root, 500, 500);
-        primaryStage.setScene(scene);
-
-
         primaryStage.show();
     }
 
