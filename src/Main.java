@@ -1,7 +1,9 @@
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -70,6 +72,10 @@ public class Main extends Application {
 
             history.closeConnection(connection);
         });
+
+        Parent root = FXMLLoader.load(getClass().getResource("tic_tac_toe.fxml"));
+        Scene scene = new Scene(root, 500, 500);
+        primaryStage.setScene(scene);
 
 
         primaryStage.show();
