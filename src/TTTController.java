@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -14,6 +15,8 @@ import java.util.*;
 
 public class TTTController extends TimerTask implements EventHandler<ActionEvent>, Initializable {
 
+    @FXML
+    private Label player;
     @FXML
     private Button button0;
     @FXML
@@ -44,12 +47,21 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
     String url;
     String url1;
+    private String playerName;
+    private String date;
 
     String youIcon = "cow.png";
     String comIcon = "lion.jpg";
     List<String> urlArr = new ArrayList<>();
 
     int clickCount = 0;
+
+    public TTTController(String playerName, String date) {
+
+        this.playerName = playerName;
+        this.date = date;
+    }
+
     /**
      * The action to be performed by this timer task.
      */
@@ -286,6 +298,10 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
             urlArr.add(String.valueOf(i));
 
         }
+        System.out.println("HEY");
+        player.setText(playerName);
+        System.out.println(playerName);
+
 
 
     }

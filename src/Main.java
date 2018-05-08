@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,10 +59,20 @@ public class Main extends Application {
         });
 
         // TIc Tac Toe scene
-        Parent root = FXMLLoader.load(getClass().getResource("tic_tac_toe.fxml"));
-        Scene ticTacToeScreen = new Scene(root, 500, 500);
-        ticTacToeScreen.getStylesheets().add("Styles/style.css");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("tic_tac_toe.fxml"));
         btn_GoToTTT.setOnAction(event -> {
+            DateFormat dateFormat= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            TTTController ticTacToeCtrl = new TTTController(txt_playerName.getText(),dateFormat.format(date));
+            loader.setController(ticTacToeCtrl);
+            Parent root = null;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Scene ticTacToeScreen = new Scene(root, 500, 500);
+            ticTacToeScreen.getStylesheets().add("Styles/style.css");
             primaryStage.setScene(ticTacToeScreen);
             setCenter(primaryStage);
         });
