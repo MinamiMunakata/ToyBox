@@ -44,6 +44,11 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
     private List<Button> buttons = new ArrayList<Button>();
     @FXML
     private Label playerSocreID;
+    @FXML
+    private Label comScoreID;
+    @FXML
+    private Label lblScore;
+
 
     private String url;
     private String comIconURL;
@@ -152,19 +157,19 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
     }
 
 
+
     @FXML
     public String score(){
 
-        // playerSocreID.setText(String.valueOf(playerScore) + " - " + String.valueOf(comScore));
-        //lblScore.setText(String.format("  %d - %d  ", player1.getScore(), computer.getScore()));
-
-        //return String.valueOf(playerScore) + " - " + String.valueOf(comScore);
+        lblScore.setText(String.valueOf(playerScore) + " - " + String.valueOf(comScore) );
         return String.valueOf(playerScore) + " - " + String.valueOf(comScore);
+
     }
 
 
 
     public void checkStatus() {
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -172,23 +177,25 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                         () -> {
 
                             if (isWin(url)) {
+                                playerScore++;
+                                score();
+
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("YOU WIN");
                                 alert.setHeaderText("Congratulation!");
                                 alert.setContentText("you wanna try again?");
 
                                 alertButton(alert);
-                                playerScore++;
-                                System.out.println(score());
                             } else if (isWin(comIconURL)) {
+                                comScore++;
+                                score();
+//                                System.out.println(score());
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("COMPUTER WIN");
                                 alert.setHeaderText("Ooops! You lose..");
                                 alert.setContentText("you wanna try again?");
 
                                 alertButton(alert);
-                                comScore++;
-                                System.out.println(score());
                             } else if (clickCount == 5){
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("TIE");
@@ -236,6 +243,7 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
             clickCount = 0;
         }
         else {
+            GameHistory.addPlayRecord(playerName,score(),date);
             System.exit(0); //0 == don't delete
         }
     }
@@ -275,9 +283,6 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
         if (playerName.equals("")){
             player.setText("Player");
         }
-
-
-
 
 
     }
