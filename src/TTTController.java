@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
 
 import java.net.URL;
 import java.util.*;
-import java.util.function.ToDoubleBiFunction;
 
 public class TTTController extends TimerTask implements EventHandler<ActionEvent>, Initializable {
 
@@ -51,8 +50,8 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
     private String playerName;
     private String date;
 
-    String youIcon = "cow.png";
-    String comIcon = "lion.jpg";
+    String youIcon = "Image/cow.png";
+    String comIcon = "Image/lion.jpg";
     List<String> urlArr = new ArrayList<>();
 
     int clickCount = 0;
