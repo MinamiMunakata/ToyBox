@@ -5,12 +5,17 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.text.DateFormat;
@@ -20,16 +25,26 @@ import java.util.Date;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream("src/Image/unicorn.jpg");
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
         // first scene
         primaryStage.setTitle("Toy Box");
         primaryStage.setResizable(false);
         Button btn_changeIcon = new Button("Change an icon");
-        Button btn_GoToTTT = new Button("Tic Tac Toe");
+//        FileInputStream inputStream = new FileInputStream("Image/unicorn.jpg");
+        Image image = new Image(inputStream);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(100);
         final TextField txt_playerName = new TextField();
         txt_playerName.setPromptText("Enter your first name.");
         txt_playerName.setPrefColumnCount(10);
         Button btn_GoToBB = new Button("Brick Breaker");
+        Button btn_GoToTTT = new Button("Tic Tac Toe");
         Button btn_GoToHistory = new Button("History");
 
         GridPane gridPane = new GridPane();
@@ -37,10 +52,11 @@ public class Main extends Application {
         gridPane.setVgap(5);
         gridPane.setHgap(5);
         gridPane.add(btn_changeIcon, 0, 0, 2, 1);
-        gridPane.add(txt_playerName, 0, 1, 2, 1);
+        gridPane.add(imageView, 0, 1, 2, 4);
+        gridPane.add(txt_playerName, 0, 2, 2, 1);
         gridPane.add(btn_GoToBB, 0, 2, 1, 1);
-        gridPane.add(btn_GoToTTT,1,2,1,1);
-        gridPane.add(btn_GoToHistory,0,3,1,1);
+        gridPane.add(btn_GoToTTT,1,3,1,1);
+        gridPane.add(btn_GoToHistory,0,4,1,1);
 
         Scene firstScene = new Scene(gridPane);
         primaryStage.setScene(firstScene);
@@ -92,7 +108,8 @@ public class Main extends Application {
             primaryStage.setScene(historyScreen);
             setCenter(primaryStage);
 
-            history.closeConnection(connection);
+            GameHistory.closeConnection(connection);
+
         });
         primaryStage.show();
     }

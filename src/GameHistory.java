@@ -63,10 +63,10 @@ public class GameHistory {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        CloseConnection(connection);
+        closeConnection(connection);
     }
 
-    private static void CloseConnection(Connection connection) {
+    public static void closeConnection(Connection connection) {
         try {
             if (connection != null) {
                 connection.close();
@@ -79,7 +79,8 @@ public class GameHistory {
 
     private static Connection getConnection(Connection connection) {
         try {
-            String url = "jdbc:sqlite:src/toybox.db";
+//            String url = "jdbc:sqlite:src/toybox.db";
+            String url = "jdbc:sqlite::resource:toybox.db";
             connection = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite toybox.db has been established.");
         } catch (SQLException e) {
@@ -104,9 +105,9 @@ public class GameHistory {
         }
     }
 
-    public void closeConnection(Connection connection) {
-        CloseConnection(connection);
-    }
+//    public void closeConnection(Connection connection) {
+//        closeConnection(connection);
+//    }
 
 
 }
