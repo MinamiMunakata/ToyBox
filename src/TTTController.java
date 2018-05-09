@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.ToDoubleBiFunction;
 
 public class TTTController extends TimerTask implements EventHandler<ActionEvent>, Initializable {
 
@@ -36,17 +37,15 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
     @FXML
     private Button button8;
 
-
     @FXML
-    private ImageView yourImageView,comImage;
-
+    private ImageView yourImageView, comImage;
     private final int BUTTONSIZE = 80;
 
     @FXML
     private List<Button> buttons = new ArrayList<Button>();
 
-    String url;
-    String url1;
+    private String url;
+    private String comIconURL;
     private String playerName;
     private String date;
 
@@ -76,16 +75,15 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
      *
      * @param event the event which occurred
      */
+    @FXML
     @Override
     public void handle(ActionEvent event) {
-
 
         // playerImage's URL
         Image playerImage = new LocatedImage(youIcon);
         url = playerImage instanceof LocatedImage ?
                 ((LocatedImage) playerImage).getURL() : null;
         ImageView yourImageView = new ImageView(playerImage);
-
 
         // Image's size
         yourImageView.setFitHeight(BUTTONSIZE);
@@ -97,160 +95,133 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
             if (button.getId().equals(buttons.get(i).getId())) {
                 System.out.println("HEYYYYYYY");
                 urlArr.set(i, url);
-                // TODO too early
-                checkStatus();
                 clickCount++;
                 System.out.println(clickCount);
-
-            } else {
-                System.out.println("NOOOOOO");
             }
         }
 
         if (!button.isDisable()) {
             button.setGraphic(yourImageView);
             button.setDisable(true);
+            checkStatus();
         }
         System.out.println(urlArr.toString());
 
+        if (!isWin(url)){
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(
+                            () -> {
+                                // commputerImage's URL
+                                Image comImage = new LocatedImage(comIcon);
+                                comIconURL = comImage instanceof  LocatedImage ?
+                                        ((LocatedImage) comImage).getURL() : null;
+                                ImageView comImageView = new ImageView(comImage);
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(
-                        () -> {
-                            // commputerImage's URL
-                            Image comImage = new LocatedImage(comIcon);
-                            url1 = comImage instanceof  LocatedImage ?
-                                    ((LocatedImage) comImage).getURL() : null;
-                            ImageView comImageView = new ImageView(comImage);
-
-                            comImageView.setFitWidth(BUTTONSIZE);
-                            comImageView.setFitHeight(BUTTONSIZE);
+                                comImageView.setFitWidth(BUTTONSIZE);
+                                comImageView.setFitHeight(BUTTONSIZE);
 
 
-                            // Computer turn.
-                            Random random = new Random();
-                            boolean check = true;
+                                // Computer turn.
+                                Random random = new Random();
+//                            boolean check = true;
 
-                            if(clickCount == 5) {
-                                check = false;
-                                checkStatus();
-                            }
+                                if(clickCount < 5) {
+//                                check = false;
+//                                checkStatus();
 
-                            while (check){
+                                    while (true){
 
-                                int randomIndex = random.nextInt(buttons.size());
-                                Button randomElement = buttons.get(randomIndex);
-                                System.out.println(randomElement);
-                                System.out.println("randomElemtn1: " + randomElement);
-                                System.out.println("NOOOOOO");
+                                        int randomIndex = random.nextInt(buttons.size());
+                                        Button randomElement = buttons.get(randomIndex);
+                                        System.out.println(randomElement);
+                                        System.out.println("randomElemtn1: " + randomElement);
+                                        System.out.println("NOOOOOO");
 
-                                if (!randomElement.isDisable()){
-                                    //Thread.sleep(800);
-                                    randomElement.setGraphic(comImageView);
-                                    System.out.println(comImageView);
-                                    randomElement.setDisable(true);
-                                    urlArr.set(randomIndex, url1);
-                                    System.out.println("HEYYYYYYY");
-                                    // TODO too early
-                                    checkStatus();
-                                    check = false;
-                                    break;
+                                        if (!randomElement.isDisable()){
+                                            randomElement.setGraphic(comImageView);
+                                            System.out.println(comImageView);
+                                            randomElement.setDisable(true);
+                                            urlArr.set(randomIndex, comIconURL);
+                                            System.out.println("HEYYYYYYY");
+                                            checkStatus();
+                                            //check = false;
+                                            break;
+                                        }
+                                    }
                                 }
+
+                                System.out.println(urlArr.toString());
                             }
+                    );
+                }
+            };
 
-                            System.out.println(urlArr.toString());
-                        }
-                );
-
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.schedule(task, 1000L);
-
-
+            Timer timer = new Timer();
+            timer.schedule(task, 1000L);
+        }
     }
 
 
     public void checkStatus() {
-        // judge who win
-
-        boolean playerWin = urlArr.get(0).equals(url) && urlArr.get(1).equals(url) && urlArr.get(2).equals(url) ||
-                urlArr.get(3).equals(url) && urlArr.get(4).equals(url) && urlArr.get(5).equals(url) ||
-                urlArr.get(6).equals(url) && urlArr.get(7).equals(url) && urlArr.get(8).equals(url) ||
-                urlArr.get(0).equals(url) && urlArr.get(3).equals(url) && urlArr.get(6).equals(url) ||
-                urlArr.get(1).equals(url) && urlArr.get(4).equals(url) && urlArr.get(7).equals(url) ||
-                urlArr.get(2).equals(url) && urlArr.get(5).equals(url) && urlArr.get(8).equals(url) ||
-                urlArr.get(0).equals(url) && urlArr.get(4).equals(url) && urlArr.get(8).equals(url) ||
-                urlArr.get(2).equals(url) && urlArr.get(4).equals(url) && urlArr.get(6).equals(url) ;
-
-
-        boolean comWin = urlArr.get(0).equals(url1) && urlArr.get(1).equals(url1) && urlArr.get(2).equals(url1) ||
-                urlArr.get(3).equals(url1) && urlArr.get(4).equals(url1) && urlArr.get(5).equals(url1) ||
-                urlArr.get(6).equals(url1) && urlArr.get(7).equals(url1) && urlArr.get(8).equals(url1) ||
-                urlArr.get(0).equals(url1) && urlArr.get(3).equals(url1) && urlArr.get(6).equals(url1) ||
-                urlArr.get(1).equals(url1) && urlArr.get(4).equals(url1) && urlArr.get(7).equals(url1) ||
-                urlArr.get(2).equals(url1) && urlArr.get(5).equals(url1) && urlArr.get(8).equals(url1) ||
-                urlArr.get(0).equals(url1) && urlArr.get(4).equals(url1) && urlArr.get(8).equals(url1) ||
-                urlArr.get(2).equals(url1) && urlArr.get(4).equals(url1) && urlArr.get(6).equals(url1);
-
-        boolean tie;
-
-        // Check who win.
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(
                         () -> {
-                            if (playerWin)
+
+                            if (isWin(url))
                             {
-//                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-////                                alert.setTitle("WINNER");
-////                                alert.setContentText("You win!");
-////                                alert.getDialogPane().setPrefSize(200, 200);
-////                                alert.showAndWait();
-////                                System.exit(0);
-                                optionsAlert();
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("YOU WIN");
+                                alert.setHeaderText("Congratulation!");
+                                alert.setContentText("you wanna try again?");
+
+                                alertButton(alert);
 
 
-                            } else if (comWin) {
-/*                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("WINNER");
-                                alert.setContentText("Computer win!");
-                                alert.getDialogPane().setPrefSize(200, 200);
-                                alert.showAndWait();
-                                System.exit(0);*/
-                                optionsAlert();
+
+                            } else if (isWin(comIconURL)) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("COMPUTER WIN");
+                                alert.setHeaderText("Ooops! You lose..");
+                                alert.setContentText("you wanna try again?");
+
+                                alertButton(alert);
 
                             } else if (clickCount == 5){
-/*                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("WINNER");
-                                alert.setContentText("Tie!");
-                                alert.getDialogPane().setPrefSize(200, 200);
-                                alert.showAndWait();
-                                System.exit(0);*/
-                                optionsAlert();
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("TIE");
+                                alert.setHeaderText("Tie!");
+                                alert.setContentText("you wanna try again?");
+
+                                alertButton(alert);
 
                             }
-
-
                         });
             }
         };
+
         Timer timer = new Timer();
         timer.schedule(task, 800L);
 
 
     }
 
-    public void optionsAlert(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(null);
-        alert.setHeaderText(null);
-        alert.setContentText("you wanna try again?");
+    private boolean isWin(String url) {
+        return urlArr.get(0).equals(url) && urlArr.get(1).equals(url) && urlArr.get(2).equals(url) ||
+                urlArr.get(3).equals(url) && urlArr.get(4).equals(url) && urlArr.get(5).equals(url) ||
+                urlArr.get(6).equals(url) && urlArr.get(7).equals(url) && urlArr.get(8).equals(url) ||
+                urlArr.get(0).equals(url) && urlArr.get(3).equals(url) && urlArr.get(6).equals(url) ||
+                urlArr.get(1).equals(url) && urlArr.get(4).equals(url) && urlArr.get(7).equals(url) ||
+                urlArr.get(2).equals(url) && urlArr.get(5).equals(url) && urlArr.get(8).equals(url) ||
+                urlArr.get(0).equals(url) && urlArr.get(4).equals(url) && urlArr.get(8).equals(url) ||
+                urlArr.get(2).equals(url) && urlArr.get(4).equals(url) && urlArr.get(6).equals(url);
+    }
 
+
+    private void alertButton(Alert alert) {
         ButtonType button1 = new ButtonType("One More!");
         ButtonType button2 = new ButtonType("Exit");
 
@@ -260,11 +231,19 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
         if (result.get() == button1){
             // TODO figured out how to restart the game.
 
+            for(Button btn: buttons) {
+                btn.setGraphic(null);
+                btn.setDisable(false);
+            }
 
+            for (int i = 0; i < 9; i++) {
+                urlArr.set(i, String.valueOf(i));
+            }
+            clickCount = 0;
         }
-
-        else
+        else {
             System.exit(0); //0 == don't delete
+        }
     }
 
     /**
@@ -302,7 +281,6 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
         player.setText(playerName);
         System.out.println(playerName);
 
-
-
     }
+
 }
