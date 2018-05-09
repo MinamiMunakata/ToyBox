@@ -26,20 +26,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FileInputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream("src/Image/unicorn.jpg");
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
         // first scene
         primaryStage.setTitle("Toy Box");
         primaryStage.setResizable(false);
         Button btn_changeIcon = new Button("Change an icon");
-//        FileInputStream inputStream = new FileInputStream("Image/unicorn.jpg");
+        FileInputStream inputStream = new FileInputStream("src/Image/unicorn.jpg");
         Image image = new Image(inputStream);
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(100);
+        imageView.setPreserveRatio(true);
         final TextField txt_playerName = new TextField();
         txt_playerName.setPromptText("Enter your first name.");
         txt_playerName.setPrefColumnCount(10);
