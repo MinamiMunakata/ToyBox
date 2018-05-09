@@ -25,7 +25,7 @@ import java.util.Date;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception{
         FileInputStream inputStream = null;
         try {
             inputStream = new FileInputStream("src/Image/unicorn.jpg");
@@ -43,6 +43,7 @@ public class Main extends Application {
         final TextField txt_playerName = new TextField();
         txt_playerName.setPromptText("Enter your first name.");
         txt_playerName.setPrefColumnCount(10);
+
 
         Button btn_GoToBB = new Button("Brick Breaker");
         Button btn_GoToTTT = new Button("Tic Tac Toe");
