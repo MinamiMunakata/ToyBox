@@ -6,7 +6,9 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -29,15 +31,49 @@ public class Main extends Application {
         // first scene
         primaryStage.setTitle("Toy Box");
         primaryStage.setResizable(false);
-        Button btn_changeIcon = new Button("Change an icon");
+        BorderPane borderPane = new BorderPane();
+        HBox hBoxAtTop = new HBox();
+        hBoxAtTop.setPadding(new Insets(15,12,15,12));
+        hBoxAtTop.setSpacing(10);
+        hBoxAtTop.setStyle("-fx-background-color: #c46ab5");
+//        hBoxAtTop.setStyle("-fx-background-color: #F1DC21");
+        borderPane.setTop(hBoxAtTop);
+
+
+//        Button btn_changeIcon = new Button("Change an icon");
         FileInputStream inputStream = new FileInputStream("src/Image/unicorn.jpg");
         Image image = new Image(inputStream);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(100);
+        imageView.setFitWidth(300);
         imageView.setPreserveRatio(true);
+        HBox image_HBox = new HBox(imageView);
         final TextField txt_playerName = new TextField();
         txt_playerName.setPromptText("Enter your first name.");
         txt_playerName.setPrefColumnCount(10);
+
+
+        final ToggleGroup toggleGroup = new ToggleGroup();
+        RadioButton rb_BB = new RadioButton("Brick Breaker");
+        rb_BB.setToggleGroup(toggleGroup);
+        RadioButton rb_TTT = new RadioButton("Tic Tac Toe");
+        rb_TTT.setToggleGroup(toggleGroup);
+
+        HBox rb_HBox = new HBox(5);
+        rb_HBox.getChildren().addAll(rb_BB,rb_TTT);
+
+        VBox vBox = new VBox(5);
+        vBox.setStyle("-fx-background-color: #F4DF29");
+        vBox.getChildren().addAll(txt_playerName,imageView,rb_HBox);
+        borderPane.setCenter(vBox);
+
+
+        StackPane stackPane = new StackPane();
+        Image icon = new Image(new FileInputStream("src/Image/clock.png"));
+        ImageView iconView = new ImageView(icon);
+        stackPane.getChildren().add(iconView);
+        hBoxAtTop.getChildren().add(stackPane);
+
+
 
 
         Button btn_GoToBB = new Button("Brick Breaker");
@@ -48,14 +84,15 @@ public class Main extends Application {
         gridPane.setPadding(new Insets(10, 10, 10,10));
         gridPane.setVgap(5);
         gridPane.setHgap(5);
-        gridPane.add(btn_changeIcon, 0, 0, 2, 1);
-        gridPane.add(imageView, 0, 1, 2, 4);
+//        gridPane.add(btn_changeIcon, 0, 0, 2, 1);
+        gridPane.add(image_HBox, 0, 6, 2, 4);
         gridPane.add(txt_playerName, 0, 2, 2, 1);
         gridPane.add(btn_GoToBB, 0, 2, 1, 1);
         gridPane.add(btn_GoToTTT,1,3,1,1);
         gridPane.add(btn_GoToHistory,0,4,1,1);
+        gridPane.add(rb_HBox,0,5,1,1);
 
-        Scene firstScene = new Scene(gridPane);
+        Scene firstScene = new Scene(gridPane, 400,500);
         primaryStage.setScene(firstScene);
 
         // Brick Breaker scene
