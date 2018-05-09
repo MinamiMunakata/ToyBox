@@ -16,7 +16,9 @@
                     <Font name="Arial Black" size="20.0" />
                 </font>
             </Label>
-            <Label fx:id="playerScore" alignment="TOP_CENTER" prefHeight="100" prefWidth="100" text="   0 - 0   "></Label>
+
+            <Label fx:id="lblScore" alignment="TOP_CENTER" prefHeight="50" prefWidth="50" text="0 - 0"></Label>
+
             <Label fx:id="computer" alignment="TOP_RIGHT" prefWidth="150" prefHeight="50" text="computer">
                 <font>
                     <Font name="Arial Black" size="20.0" />
