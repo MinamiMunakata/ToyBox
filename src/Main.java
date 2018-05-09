@@ -43,6 +43,7 @@ public class Main extends Application {
         final TextField txt_playerName = new TextField();
         txt_playerName.setPromptText("Enter your first name.");
         txt_playerName.setPrefColumnCount(10);
+
         Button btn_GoToBB = new Button("Brick Breaker");
         Button btn_GoToTTT = new Button("Tic Tac Toe");
         Button btn_GoToHistory = new Button("History");
@@ -65,7 +66,11 @@ public class Main extends Application {
         btn_GoToBB.setOnAction(event -> {
             DateFormat dateFormat= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
+            final TextField txt_socre = new TextField();
             BBController brickBreakerCtrl = new BBController(txt_playerName.getText(), dateFormat.format(date));   // BBController instance
+            if (txt_playerName.getText().equals("")){
+                txt_playerName.setText("Player");
+            }
             Scene brickBreakerScreen = new Scene(brickBreakerCtrl.getGroup(), brickBreakerCtrl.getWIDTH(), brickBreakerCtrl.getHEIGHT(), Color.WHITE);
             brickBreakerCtrl.setEventHandler(brickBreakerScreen);
             brickBreakerCtrl.gamePlay();
@@ -80,6 +85,7 @@ public class Main extends Application {
             DateFormat dateFormat= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             TTTController ticTacToeCtrl = new TTTController(txt_playerName.getText(),dateFormat.format(date));
+            System.out.println(txt_playerName.getText());
             loader.setController(ticTacToeCtrl);
             Parent root = null;
             try {

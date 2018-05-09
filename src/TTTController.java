@@ -43,6 +43,8 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
     @FXML
     private List<Button> buttons = new ArrayList<Button>();
+    @FXML
+    private Label playerSocreID;
 
     private String url;
     private String comIconURL;
@@ -55,8 +57,10 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
     int clickCount = 0;
 
-    public TTTController(String playerName, String date) {
+    private int playerScore;
+    private int comScore;
 
+    public TTTController(String playerName, String date) {
         this.playerName = playerName;
         this.date = date;
     }
@@ -75,7 +79,6 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
      *
      * @param event the event which occurred
      */
-    @FXML
     @Override
     public void handle(ActionEvent event) {
 
@@ -93,10 +96,8 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
         Button button = (Button) event.getSource();
         for (int i = 0; i < buttons.size(); i++) {
             if (button.getId().equals(buttons.get(i).getId())) {
-                System.out.println("HEYYYYYYY");
                 urlArr.set(i, url);
                 clickCount++;
-                System.out.println(clickCount);
             }
         }
 
@@ -105,7 +106,6 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
             button.setDisable(true);
             checkStatus();
         }
-        System.out.println(urlArr.toString());
 
         if (!isWin(url)){
             TimerTask task = new TimerTask() {
@@ -125,43 +125,44 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
                                 // Computer turn.
                                 Random random = new Random();
-//                            boolean check = true;
 
                                 if(clickCount < 5) {
-//                                check = false;
-//                                checkStatus();
-
                                     while (true){
 
                                         int randomIndex = random.nextInt(buttons.size());
                                         Button randomElement = buttons.get(randomIndex);
-                                        System.out.println(randomElement);
-                                        System.out.println("randomElemtn1: " + randomElement);
-                                        System.out.println("NOOOOOO");
 
                                         if (!randomElement.isDisable()){
                                             randomElement.setGraphic(comImageView);
-                                            System.out.println(comImageView);
                                             randomElement.setDisable(true);
                                             urlArr.set(randomIndex, comIconURL);
-                                            System.out.println("HEYYYYYYY");
                                             checkStatus();
                                             //check = false;
                                             break;
                                         }
                                     }
                                 }
-
-                                System.out.println(urlArr.toString());
                             }
                     );
                 }
             };
 
             Timer timer = new Timer();
-            timer.schedule(task, 1000L);
+            timer.schedule(task, 800L);
         }
     }
+
+
+    @FXML
+    public String score(){
+
+        // playerSocreID.setText(String.valueOf(playerScore) + " - " + String.valueOf(comScore));
+        //lblScore.setText(String.format("  %d - %d  ", player1.getScore(), computer.getScore()));
+
+        //return String.valueOf(playerScore) + " - " + String.valueOf(comScore);
+        return String.valueOf(playerScore) + " - " + String.valueOf(comScore);
+    }
+
 
 
     public void checkStatus() {
@@ -171,17 +172,15 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                 Platform.runLater(
                         () -> {
 
-                            if (isWin(url))
-                            {
+                            if (isWin(url)) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("YOU WIN");
                                 alert.setHeaderText("Congratulation!");
                                 alert.setContentText("you wanna try again?");
 
                                 alertButton(alert);
-
-
-
+                                playerScore++;
+                                System.out.println(score());
                             } else if (isWin(comIconURL)) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("COMPUTER WIN");
@@ -189,24 +188,20 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                                 alert.setContentText("you wanna try again?");
 
                                 alertButton(alert);
-
+                                comScore++;
+                                System.out.println(score());
                             } else if (clickCount == 5){
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("TIE");
                                 alert.setHeaderText("Tie!");
                                 alert.setContentText("you wanna try again?");
-
                                 alertButton(alert);
-
                             }
                         });
             }
         };
-
         Timer timer = new Timer();
-        timer.schedule(task, 800L);
-
-
+        timer.schedule(task, 500L);
     }
 
     private boolean isWin(String url) {
@@ -277,10 +272,17 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
             urlArr.add(String.valueOf(i));
 
         }
-        System.out.println("HEY");
-        player.setText(playerName);
-        System.out.println(playerName);
+
+        if (playerName.equals("")){
+            player.setText("Player");
+        }
+
+
+
+
 
     }
+
+
 
 }
