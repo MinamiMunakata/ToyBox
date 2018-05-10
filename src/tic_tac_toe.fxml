@@ -7,7 +7,6 @@
 <?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
-            <!--fx:controller="TTTController">-->
     <top>
         <FlowPane alignment="CENTER">
             <ImageView fx:id="yourImageView" fitHeight="60.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true"></ImageView>

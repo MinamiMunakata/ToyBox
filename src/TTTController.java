@@ -1,4 +1,3 @@
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,11 +9,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Handler;
 
 public class TTTController extends TimerTask implements EventHandler<ActionEvent>, Initializable {
 
@@ -55,8 +52,8 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
     private String playerName;
     private String date;
 
-    String youIcon = "Image/cow.png";
-    String comIcon = "Image/lion.jpg";
+    String youIcon = "Image/Rabbit-icon.png";
+    String comIcon = "Image/Turtle-icon.png";
     List<String> urlArr = new ArrayList<>();
 
     int clickCount = 0;
@@ -145,7 +142,7 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                                         Random random = new Random();
 
                                         if (clickCount < 5) {
-                                            while (true) {
+//                                            while (true) {
 
                                                 int randomIndex = random.nextInt(buttons.size());
                                                 Button randomElement = buttons.get(randomIndex);
@@ -158,7 +155,7 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                                                     checkStatus();
                                                     break;
                                                 }
-                                            }
+//                                            }
                                         }
                                     }
                                 }
@@ -211,7 +208,7 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                                 alert.setContentText("you wanna try again?");
 
                                 alertButton(alert);
-                            } else if (clickCount == 5){
+                            } else if (clickCount >= 5){
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("TIE");
                                 alert.setHeaderText("Tie!");
@@ -299,6 +296,8 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
         if (playerName.equals("")){
             player.setText("Player");
+        } else {
+            player.setText(playerName);
         }
 
 
