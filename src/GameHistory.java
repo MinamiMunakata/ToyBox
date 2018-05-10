@@ -83,8 +83,8 @@ public class GameHistory {
 
     private static Connection getConnection(Connection connection) {
         try {
-//            String url = "jdbc:sqlite:src/toybox.db";
-            String url = "jdbc:sqlite::resource:toybox.db";
+            String url = "jdbc:sqlite:src/toybox.db";
+//            String url = "jdbc:sqlite::resource:toybox.db";
             connection = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite toybox.db has been established.");
         } catch (SQLException e) {
