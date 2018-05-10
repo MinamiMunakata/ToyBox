@@ -20,23 +20,27 @@ public class GameHistory {
         label.setFont(new Font("Arial", 20));
 
         TableColumn nameCol = new TableColumn("Name");
-        nameCol.setMinWidth(100);
+        nameCol.setMinWidth(90);
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<Player, String>("name"));
         TableColumn scoreCol = new TableColumn("Score");
-        scoreCol.setMinWidth(100);
+        scoreCol.setMinWidth(90);
         scoreCol.setCellValueFactory(
                 new PropertyValueFactory<Player, String>("score"));
         TableColumn dateCol = new TableColumn("Date");
-        dateCol.setMinWidth(200);
+        dateCol.setMinWidth(180);
         dateCol.setCellValueFactory(
                 new PropertyValueFactory<Player, String>("date"));
         table.setItems(data);
         table.getColumns().addAll(nameCol,scoreCol,dateCol);
+        nameCol.setStyle("-fx-alignment: center");
+        scoreCol.setStyle("-fx-alignment: center");
+
+        dateCol.setStyle("-fx-alignment: center");
 
         final VBox vBox = new VBox();
         vBox.setSpacing(5);
-        vBox.setPadding(new Insets(10,20,0,20));
+        vBox.setPadding(new Insets(20,20,0,20));
         vBox.getChildren().addAll(label,table);
         group.getChildren().addAll(vBox);
         return group;
@@ -104,10 +108,5 @@ public class GameHistory {
             e.printStackTrace();
         }
     }
-
-//    public void closeConnection(Connection connection) {
-//        closeConnection(connection);
-//    }
-
 
 }

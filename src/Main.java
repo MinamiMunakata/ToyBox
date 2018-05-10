@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -13,11 +14,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.text.DateFormat;
@@ -36,100 +40,91 @@ public class Main extends Application {
         hBoxAtTop.setPadding(new Insets(15,12,15,12));
         hBoxAtTop.setSpacing(10);
         hBoxAtTop.setStyle("-fx-background-color: #c46ab5");
-//        hBoxAtTop.setStyle("-fx-background-color: #F1DC21");
+        Text text = new Text();
+        text.setText("TOY BOX");
+        text.setFill(Color.WHITE);
+        text.setFont(Font.font("Comic Sans MS",FontWeight.BOLD,40));
+        text.setTextAlignment(TextAlignment.CENTER);
+        Pane spacer = new Pane();
+        hBoxAtTop.setHgrow(spacer,Priority.ALWAYS);
+        spacer.setMinSize(10,1);
+        Image icon = new Image(new FileInputStream("src/Image/clock.png"));
+        Button btn_GoToHistory = new Button();
+        btn_GoToHistory.setGraphic(new ImageView(icon));
+        btn_GoToHistory.setStyle("-fx-background-color: #c46ab5");
+        btn_GoToHistory.setMinSize(Button.USE_PREF_SIZE,Button.USE_PREF_SIZE);
+        btn_GoToHistory.setAlignment(Pos.CENTER);
+        hBoxAtTop.getChildren().addAll(text,spacer,btn_GoToHistory);
         borderPane.setTop(hBoxAtTop);
 
-
-//        Button btn_changeIcon = new Button("Change an icon");
+        final TextField txt_playerName = new TextField();
+        txt_playerName.setPromptText("Enter your first name.");
+        txt_playerName.setPrefColumnCount(10);
+        txt_playerName.setMinWidth(200);
+        txt_playerName.setMaxWidth(250);
+        txt_playerName.setFont(Font.font(15));
         FileInputStream inputStream = new FileInputStream("src/Image/unicorn.jpg");
         Image image = new Image(inputStream);
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(300);
         imageView.setPreserveRatio(true);
-        HBox image_HBox = new HBox(imageView);
-        final TextField txt_playerName = new TextField();
-        txt_playerName.setPromptText("Enter your first name.");
-        txt_playerName.setPrefColumnCount(10);
-
-
         final ToggleGroup toggleGroup = new ToggleGroup();
         RadioButton rb_BB = new RadioButton("Brick Breaker");
         rb_BB.setToggleGroup(toggleGroup);
+        rb_BB.setFont(Font.font(14));
         RadioButton rb_TTT = new RadioButton("Tic Tac Toe");
+        rb_TTT.setFont(Font.font(14));
         rb_TTT.setToggleGroup(toggleGroup);
 
-        HBox rb_HBox = new HBox(5);
+        HBox rb_HBox = new HBox(20);
+        rb_HBox.setAlignment(Pos.CENTER);
         rb_HBox.getChildren().addAll(rb_BB,rb_TTT);
 
-        VBox vBox = new VBox(5);
+        Button btn_play = new Button("P L A Y !");
+        btn_play.setFont(Font.font("Comic Sans MS",15));
+        StackPane pane = new StackPane(btn_play);
+        pane.setPadding(new Insets(20,0,0,0));
+
+        VBox vBox = new VBox(10);
+        vBox.setPadding(new Insets(30,40,60,40));
         vBox.setStyle("-fx-background-color: #F4DF29");
-        vBox.getChildren().addAll(txt_playerName,imageView,rb_HBox);
+        vBox.getChildren().addAll(txt_playerName,imageView,rb_HBox,pane);
+        vBox.setAlignment(Pos.CENTER);
         borderPane.setCenter(vBox);
 
-
-        StackPane stackPane = new StackPane();
-        Image icon = new Image(new FileInputStream("src/Image/clock.png"));
-        ImageView iconView = new ImageView(icon);
-        stackPane.getChildren().add(iconView);
-        hBoxAtTop.getChildren().add(stackPane);
-
-
-
-
-        Button btn_GoToBB = new Button("Brick Breaker");
-        Button btn_GoToTTT = new Button("Tic Tac Toe");
-        Button btn_GoToHistory = new Button("History");
-
-        GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(10, 10, 10,10));
-        gridPane.setVgap(5);
-        gridPane.setHgap(5);
-//        gridPane.add(btn_changeIcon, 0, 0, 2, 1);
-        gridPane.add(image_HBox, 0, 6, 2, 4);
-        gridPane.add(txt_playerName, 0, 2, 2, 1);
-        gridPane.add(btn_GoToBB, 0, 2, 1, 1);
-        gridPane.add(btn_GoToTTT,1,3,1,1);
-        gridPane.add(btn_GoToHistory,0,4,1,1);
-        gridPane.add(rb_HBox,0,5,1,1);
-
-        Scene firstScene = new Scene(gridPane, 400,500);
+        Scene firstScene = new Scene(borderPane, 400,550);
         primaryStage.setScene(firstScene);
 
-        // Brick Breaker scene
-        btn_GoToBB.setOnAction(event -> {
+        // when play! button is clicked
+        btn_play.setOnAction(event -> {
             DateFormat dateFormat= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
-            final TextField txt_socre = new TextField();
-            BBController brickBreakerCtrl = new BBController(txt_playerName.getText(), dateFormat.format(date));   // BBController instance
-            if (txt_playerName.getText().equals("")){
-                txt_playerName.setText("Player");
+            if (toggleGroup.getSelectedToggle() != null){
+                if (rb_BB.isSelected()){
+                    BBController brickBreakerCtrl = new BBController(txt_playerName.getText(), dateFormat.format(date));   // BBController instance
+                    Scene brickBreakerScreen = new Scene(brickBreakerCtrl.getGroup(), brickBreakerCtrl.getWIDTH(), brickBreakerCtrl.getHEIGHT(), Color.WHITE);
+                    brickBreakerCtrl.setEventHandler(brickBreakerScreen);
+                    brickBreakerCtrl.gamePlay();
+                    primaryStage.setScene(brickBreakerScreen);
+                    primaryStage.setTitle("Brick Breaker");
+                    setCenter(primaryStage);
+                } else if(rb_TTT.isSelected()){
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("tic_tac_toe.fxml"));
+                    TTTController ticTacToeCtrl = new TTTController(txt_playerName.getText(),dateFormat.format(date));
+                    System.out.println(txt_playerName.getText());
+                    loader.setController(ticTacToeCtrl);
+                    Parent root = null;
+                    try {
+                        root = loader.load();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Scene ticTacToeScreen = new Scene(root, 500, 500);
+                    ticTacToeScreen.getStylesheets().add("Styles/style.css");
+                    primaryStage.setScene(ticTacToeScreen);
+                    setCenter(primaryStage);
+                }
             }
-            Scene brickBreakerScreen = new Scene(brickBreakerCtrl.getGroup(), brickBreakerCtrl.getWIDTH(), brickBreakerCtrl.getHEIGHT(), Color.WHITE);
-            brickBreakerCtrl.setEventHandler(brickBreakerScreen);
-            brickBreakerCtrl.gamePlay();
-            primaryStage.setScene(brickBreakerScreen);
-            primaryStage.setTitle("Brick Breaker");
-            setCenter(primaryStage);
-        });
-
-        // TIc Tac Toe scene
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("tic_tac_toe.fxml"));
-        btn_GoToTTT.setOnAction(event -> {
-            DateFormat dateFormat= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date date = new Date();
-            TTTController ticTacToeCtrl = new TTTController(txt_playerName.getText(),dateFormat.format(date));
-            System.out.println(txt_playerName.getText());
-            loader.setController(ticTacToeCtrl);
-            Parent root = null;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Scene ticTacToeScreen = new Scene(root, 500, 500);
-            ticTacToeScreen.getStylesheets().add("Styles/style.css");
-            primaryStage.setScene(ticTacToeScreen);
-            setCenter(primaryStage);
         });
 
         // History scene
@@ -139,17 +134,23 @@ public class Main extends Application {
             history.readHistory(connection);
 
             Group group = history.createGameHistoryTable();
-            Scene historyScreen = new Scene(group);
+            Scene historyScreen = new Scene(group, 400,550);
             primaryStage.setTitle("Toy Box");
-            primaryStage.setWidth(450);
-            primaryStage.setHeight(550);
+//            primaryStage.setWidth(400);
+//            primaryStage.setHeight(550);
 
             primaryStage.setScene(historyScreen);
-            setCenter(primaryStage);
+//            setCenter(primaryStage);
 
             GameHistory.closeConnection(connection);
 
         });
+        btn_GoToHistory.setOnMouseEntered(
+                event -> btn_GoToHistory.setStyle("-fx-background-color: #d99ff4")
+        );
+        btn_GoToHistory.setOnMouseExited(
+                event -> btn_GoToHistory.setStyle("-fx-background-color: #c46ab5")
+        );
         primaryStage.show();
     }
 
