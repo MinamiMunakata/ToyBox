@@ -1,3 +1,4 @@
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,9 +10,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Handler;
 
 public class TTTController extends TimerTask implements EventHandler<ActionEvent>, Initializable {
 
@@ -42,10 +45,7 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
     @FXML
     private List<Button> buttons = new ArrayList<Button>();
-    @FXML
-    private Label playerSocreID;
-    @FXML
-    private Label comScoreID;
+
     @FXML
     private Label lblScore;
 
@@ -60,6 +60,10 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
     List<String> urlArr = new ArrayList<>();
 
     int clickCount = 0;
+
+    private boolean playerTurn;
+
+
 
     private int playerScore;
     private int comScore;
@@ -96,64 +100,77 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
         yourImageView.setFitHeight(BUTTONSIZE);
         yourImageView.setFitWidth(BUTTONSIZE);
 
-        // A button Clicked
-        Button button = (Button) event.getSource();
-        for (int i = 0; i < buttons.size(); i++) {
-            if (button.getId().equals(buttons.get(i).getId())) {
-                urlArr.set(i, url);
-                clickCount++;
+
+        if (playerTurn){
+            // A button Clicked
+            Button button = (Button) event.getSource();
+            for (int i = 0; i < buttons.size(); i++) {
+                if (button.getId().equals(buttons.get(i).getId())) {
+                    urlArr.set(i, url);
+                    clickCount++;
+                }
             }
+
+            if (!button.isDisable()) {
+                button.setGraphic(yourImageView);
+                playerTurn = false;
+                button.setDisable(true);
+                checkStatus();
+            }
+
+
         }
 
-        if (!button.isDisable()) {
-            button.setGraphic(yourImageView);
-            button.setDisable(true);
-            checkStatus();
-        }
 
-        if (!isWin(url)){
+
+//        while (!isWin(url) && !playerTurn){
+
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
                     Platform.runLater(
                             () -> {
-                                // commputerImage's URL
-                                Image comImage = new LocatedImage(comIcon);
-                                comIconURL = comImage instanceof  LocatedImage ?
-                                        ((LocatedImage) comImage).getURL() : null;
-                                ImageView comImageView = new ImageView(comImage);
+                                    while (!isWin(url) && !playerTurn) {
+                                        // commputerImage's URL
+                                        Image comImage = new LocatedImage(comIcon);
+                                        comIconURL = comImage instanceof LocatedImage ?
+                                                ((LocatedImage) comImage).getURL() : null;
+                                        ImageView comImageView = new ImageView(comImage);
 
-                                comImageView.setFitWidth(BUTTONSIZE);
-                                comImageView.setFitHeight(BUTTONSIZE);
+                                        comImageView.setFitWidth(BUTTONSIZE);
+                                        comImageView.setFitHeight(BUTTONSIZE);
 
 
-                                // Computer turn.
-                                Random random = new Random();
+                                        // Computer turn.
+                                        Random random = new Random();
 
-                                if(clickCount < 5) {
-                                    while (true){
+                                        if (clickCount < 5) {
+                                            while (true) {
 
-                                        int randomIndex = random.nextInt(buttons.size());
-                                        Button randomElement = buttons.get(randomIndex);
+                                                int randomIndex = random.nextInt(buttons.size());
+                                                Button randomElement = buttons.get(randomIndex);
 
-                                        if (!randomElement.isDisable()){
-                                            randomElement.setGraphic(comImageView);
-                                            randomElement.setDisable(true);
-                                            urlArr.set(randomIndex, comIconURL);
-                                            checkStatus();
-                                            //check = false;
-                                            break;
+                                                if (!randomElement.isDisable()) {
+                                                    randomElement.setGraphic(comImageView);
+                                                    playerTurn = true;
+                                                    randomElement.setDisable(true);
+                                                    urlArr.set(randomIndex, comIconURL);
+                                                    checkStatus();
+                                                    break;
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            }
                     );
                 }
             };
 
             Timer timer = new Timer();
             timer.schedule(task, 800L);
-        }
+
+
+
     }
 
 
@@ -165,8 +182,6 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
         return String.valueOf(playerScore) + " - " + String.valueOf(comScore);
 
     }
-
-
 
     public void checkStatus() {
 
@@ -223,14 +238,13 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
 
 
     private void alertButton(Alert alert) {
-        ButtonType button1 = new ButtonType("One More!");
-        ButtonType button2 = new ButtonType("Exit");
+        ButtonType btn_oneMore = new ButtonType("One More!");
+        ButtonType btn_exit = new ButtonType("Exit");
 
-        alert.getButtonTypes().setAll(button2, button1);
+        alert.getButtonTypes().setAll(btn_exit, btn_oneMore);
         Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.get() == button1){
-            // TODO figured out how to restart the game.
+        if (result.get() == btn_oneMore){
 
             for(Button btn: buttons) {
                 btn.setGraphic(null);
@@ -241,9 +255,10 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
                 urlArr.set(i, String.valueOf(i));
             }
             clickCount = 0;
+            playerTurn = true;
         }
         else {
-            GameHistory.addPlayRecord(playerName,score(),date);
+//            GameHistory.addPlayRecord(playerName,score(),date);
             System.exit(0); //0 == don't delete
         }
     }
@@ -258,6 +273,8 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        playerTurn = true;
 
         Image image = new Image(youIcon);
         yourImageView.setImage(image);
