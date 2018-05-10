@@ -258,7 +258,7 @@ public class TTTController extends TimerTask implements EventHandler<ActionEvent
             playerTurn = true;
         }
         else {
-//            GameHistory.addPlayRecord(playerName,score(),date);
+            GameHistory.addPlayRecord(playerName,score(),date);
             System.exit(0); //0 == don't delete
         }
     }

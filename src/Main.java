@@ -22,6 +22,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.text.DateFormat;
@@ -35,39 +36,13 @@ public class Main extends Application {
         // first scene
         primaryStage.setTitle("Toy Box");
         primaryStage.setResizable(false);
+        Text text = getTitle();
+        Button btn_GoToHistory = getHistoryButton();
         BorderPane borderPane = new BorderPane();
-        HBox hBoxAtTop = new HBox();
-        hBoxAtTop.setPadding(new Insets(15,12,15,12));
-        hBoxAtTop.setSpacing(10);
-        hBoxAtTop.setStyle("-fx-background-color: #c46ab5");
-        Text text = new Text();
-        text.setText("TOY BOX");
-        text.setFill(Color.WHITE);
-        text.setFont(Font.font("Comic Sans MS",FontWeight.BOLD,40));
-        text.setTextAlignment(TextAlignment.CENTER);
-        Pane spacer = new Pane();
-        hBoxAtTop.setHgrow(spacer,Priority.ALWAYS);
-        spacer.setMinSize(10,1);
-        Image icon = new Image(new FileInputStream("src/Image/clock.png"));
-        Button btn_GoToHistory = new Button();
-        btn_GoToHistory.setGraphic(new ImageView(icon));
-        btn_GoToHistory.setStyle("-fx-background-color: #c46ab5");
-        btn_GoToHistory.setMinSize(Button.USE_PREF_SIZE,Button.USE_PREF_SIZE);
-        btn_GoToHistory.setAlignment(Pos.CENTER);
-        hBoxAtTop.getChildren().addAll(text,spacer,btn_GoToHistory);
+        HBox hBoxAtTop = getHBoxOnTop(text, btn_GoToHistory);
         borderPane.setTop(hBoxAtTop);
-
-        final TextField txt_playerName = new TextField();
-        txt_playerName.setPromptText("Enter your first name.");
-        txt_playerName.setPrefColumnCount(10);
-        txt_playerName.setMinWidth(200);
-        txt_playerName.setMaxWidth(250);
-        txt_playerName.setFont(Font.font(15));
-        FileInputStream inputStream = new FileInputStream("src/Image/unicorn.jpg");
-        Image image = new Image(inputStream);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(300);
-        imageView.setPreserveRatio(true);
+        final TextField txt_playerName = getTextFieldForPlayerName();
+        ImageView imageView = getImageViewOfUnicorn();
         final ToggleGroup toggleGroup = new ToggleGroup();
         RadioButton rb_BB = new RadioButton("Brick Breaker");
         rb_BB.setToggleGroup(toggleGroup);
@@ -75,21 +50,14 @@ public class Main extends Application {
         RadioButton rb_TTT = new RadioButton("Tic Tac Toe");
         rb_TTT.setFont(Font.font(14));
         rb_TTT.setToggleGroup(toggleGroup);
-
         HBox rb_HBox = new HBox(20);
         rb_HBox.setAlignment(Pos.CENTER);
         rb_HBox.getChildren().addAll(rb_BB,rb_TTT);
-
         Button btn_play = new Button("P L A Y !");
         btn_play.setFont(Font.font("Comic Sans MS",15));
         StackPane pane = new StackPane(btn_play);
         pane.setPadding(new Insets(20,0,0,0));
-
-        VBox vBox = new VBox(10);
-        vBox.setPadding(new Insets(30,40,60,40));
-        vBox.setStyle("-fx-background-color: #F4DF29");
-        vBox.getChildren().addAll(txt_playerName,imageView,rb_HBox,pane);
-        vBox.setAlignment(Pos.CENTER);
+        VBox vBox = getVBox(txt_playerName, imageView, rb_HBox, pane);
         borderPane.setCenter(vBox);
 
         Scene firstScene = new Scene(borderPane, 400,550);
@@ -132,18 +100,11 @@ public class Main extends Application {
             GameHistory history = new GameHistory();
             Connection connection = history.connect();
             history.readHistory(connection);
-
             Group group = history.createGameHistoryTable();
             Scene historyScreen = new Scene(group, 400,550);
             primaryStage.setTitle("Toy Box");
-//            primaryStage.setWidth(400);
-//            primaryStage.setHeight(550);
-
             primaryStage.setScene(historyScreen);
-//            setCenter(primaryStage);
-
             GameHistory.closeConnection(connection);
-
         });
         btn_GoToHistory.setOnMouseEntered(
                 event -> btn_GoToHistory.setStyle("-fx-background-color: #d99ff4")
@@ -152,6 +113,65 @@ public class Main extends Application {
                 event -> btn_GoToHistory.setStyle("-fx-background-color: #c46ab5")
         );
         primaryStage.show();
+    }
+
+    private ImageView getImageViewOfUnicorn() throws FileNotFoundException {
+        FileInputStream inputStream = new FileInputStream("src/Image/unicorn.jpg");
+        Image image = new Image(inputStream);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(300);
+        imageView.setPreserveRatio(true);
+        return imageView;
+    }
+
+    private Text getTitle() {
+        Text text = new Text();
+        text.setText("TOY BOX");
+        text.setFill(Color.WHITE);
+        text.setFont(Font.font("Comic Sans MS",FontWeight.BOLD,40));
+        text.setTextAlignment(TextAlignment.CENTER);
+        return text;
+    }
+
+    private HBox getHBoxOnTop(Text text, Button btn_GoToHistory) {
+        HBox hBoxAtTop = new HBox();
+        hBoxAtTop.setPadding(new Insets(15,12,15,12));
+        hBoxAtTop.setSpacing(10);
+        hBoxAtTop.setStyle("-fx-background-color: #c46ab5");
+        Pane spacer = new Pane();
+        hBoxAtTop.setHgrow(spacer,Priority.ALWAYS);
+        spacer.setMinSize(10,1);
+        hBoxAtTop.getChildren().addAll(text,spacer,btn_GoToHistory);
+        return hBoxAtTop;
+    }
+
+    private VBox getVBox(TextField txt_playerName, ImageView imageView, HBox rb_HBox, StackPane pane) {
+        VBox vBox = new VBox(10);
+        vBox.setPadding(new Insets(30,40,60,40));
+        vBox.setStyle("-fx-background-color: #F4DF29");
+        vBox.getChildren().addAll(txt_playerName,imageView,rb_HBox,pane);
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
+    }
+
+    private TextField getTextFieldForPlayerName() {
+        final TextField txt_playerName = new TextField();
+        txt_playerName.setPromptText("Enter your first name.");
+        txt_playerName.setPrefColumnCount(10);
+        txt_playerName.setMinWidth(200);
+        txt_playerName.setMaxWidth(250);
+        txt_playerName.setFont(Font.font(15));
+        return txt_playerName;
+    }
+
+    private Button getHistoryButton() throws FileNotFoundException {
+        Image icon = new Image(new FileInputStream("src/Image/clock.png"));
+        Button btn_GoToHistory = new Button();
+        btn_GoToHistory.setGraphic(new ImageView(icon));
+        btn_GoToHistory.setStyle("-fx-background-color: #c46ab5");
+        btn_GoToHistory.setMinSize(Button.USE_PREF_SIZE,Button.USE_PREF_SIZE);
+        btn_GoToHistory.setAlignment(Pos.CENTER);
+        return btn_GoToHistory;
     }
 
     private void setCenter(Stage primaryStage) {

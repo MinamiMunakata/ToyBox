@@ -39,7 +39,7 @@ public class GameHistory {
         dateCol.setStyle("-fx-alignment: center");
 
         final VBox vBox = new VBox();
-        vBox.setSpacing(5);
+        vBox.setSpacing(10);
         vBox.setPadding(new Insets(20,20,0,20));
         vBox.getChildren().addAll(label,table);
         group.getChildren().addAll(vBox);
