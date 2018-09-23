@@ -19,4 +19,8 @@ The player can play again by pressing the enter key.
 ![Github demo.gif](https://github.com/Minamiciccc/ToyBox/blob/media/toybox_bb.gif)
 
 ## Major Technologies
-_Java, JavaFX, IntelliJ, Git, SQLite_
+- Java
+- JavaFX
+- IntelliJ
+- Git
+- SQLite
