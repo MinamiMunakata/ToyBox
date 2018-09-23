@@ -5,7 +5,7 @@
 Each game score is stored and displayed at a history page.</br>
 I worked on [the brick breaker game](#brick-breaker) and design. (team of 2)
 
-<img src="https://github.com/Minamiciccc/ToyBox/blob/media/toybox_top.png" width="250px" alt="toybox top image" hspace="50"><img src="https://github.com/Minamiciccc/ToyBox/blob/media/toybox_history.png" width="250px" alt="toybox history page image">
+<img src="https://github.com/Minamiciccc/ToyBox/blob/media/toybox_top.png" width="250px" alt="toybox top image"><img src="https://github.com/Minamiciccc/ToyBox/blob/media/toybox_history.png" width="250px" alt="toybox history page image" hspace="50">
 
 ---
 ## Brick Breaker
