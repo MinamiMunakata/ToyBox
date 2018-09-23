@@ -3,7 +3,7 @@
 ## Overview
 **ToyBox** is a GUI desktop game application which let users play either brick breaker game or tic tac toe game.
 Each game score is stored and displayed at a history page.</br>
-I worked on [the brick breaker game](#brick-breaker) and design. (team of 2)
+I worked on [the brick breaker game](#brick-breaker), database, and design. (team of 2)
 
 <img src="https://github.com/Minamiciccc/ToyBox/blob/media/toybox_top.png" width="250px" alt="toybox top image"><img src="https://github.com/Minamiciccc/ToyBox/blob/media/toybox_history.png" width="250px" alt="toybox history page image" hspace="50">
 
